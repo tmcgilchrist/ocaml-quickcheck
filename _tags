@@ -1,0 +1,10 @@
+# OASIS_START
+# DO NOT EDIT (digest: 871312c238b645e004263b1d3fad8ef5)
+# Executable test
+# Library cobson
+"src": include
+<src/cobson.{cma,cmxa}>: oasis_library_cobson_byte
+<src/*.ml{,i}>: oasis_library_cobson_byte
+<src/cobson.{cma,cmxa}>: oasis_library_cobson_native
+<src/*.ml{,i}>: oasis_library_cobson_native
+# OASIS_STOP

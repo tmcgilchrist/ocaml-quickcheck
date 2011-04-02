@@ -1,14 +1,38 @@
-OCAMLC=ocamlc
+# OASIS_START
+# DO NOT EDIT (digest: bc1e05bfc8b39b664f29dae8dbd3ebbb)
 
-test_List: quickCheck.cmo test_List.cmo
-	$(OCAMLC) -g -o $@ $^
+SETUP = ocaml setup.ml
 
-test_List.cmo: quickCheck.cmi
+build: setup.data
+	$(SETUP) -build $(BUILDFLAGS)
 
-%.cmi: %.mli
-	$(OCAMLC) -c -g -dtypes -o $@ $< $(OUTPUT_PROCESSING)
+doc: setup.data build
+	$(SETUP) -doc $(DOCFLAGS)
 
-%.cmo %.cmi: %.ml
-	$(OCAMLC) -c -g -dtypes -o $(@:%.cmi=%.cmo) $< $(OUTPUT_PROCESSING)
+test: setup.data build
+	$(SETUP) -test $(TESTFLAGS)
 
-OUTPUT_PROCESSING:=$(if $(FLYMAKE), | sed -e '/:$$/{N;s%\n% %;}',)
+all: 
+	$(SETUP) -all $(ALLFLAGS)
+
+install: setup.data
+	$(SETUP) -install $(INSTALLFLAGS)
+
+uninstall: setup.data
+	$(SETUP) -uninstall $(UNINSTALLFLAGS)
+
+reinstall: setup.data
+	$(SETUP) -reinstall $(REINSTALLFLAGS)
+
+clean: 
+	$(SETUP) -clean $(CLEANFLAGS)
+
+distclean: 
+	$(SETUP) -distclean $(DISTCLEANFLAGS)
+
+setup.data:
+	$(SETUP) -configure $(CONFIGUREFLAGS)
+
+.PHONY: build doc test all install uninstall reinstall clean distclean configure
+
+# OASIS_STOP
