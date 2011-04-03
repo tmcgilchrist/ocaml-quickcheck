@@ -33,3 +33,4 @@ val vector : 'a gen -> int -> 'a list gen
 
 val oneof : 'a gen list -> 'a gen
 
+val such_that : ('a -> bool) -> 'a gen -> 'a gen

@@ -1,9 +1,13 @@
+(*
+ * QuickCheck_gen - different generators
+ *)
 
 open QuickCheck_util
 
 type 'a gen = Gen of (int -> 'a)
 
 (* generator functions *)
+(* TODO: document in .mli *)
 
 let sized f = Gen (fun n ->
   let Gen m = f n in
@@ -53,3 +57,15 @@ let vector (Gen gelt) l =
     in gen [] l)
 
 let oneof gens = elements gens >>= fun x -> x
+
+let such_that_opt p gen =
+  let rec try_ k n = match n with
+    | 0 -> ret_gen None
+    | n -> resize (2 * k + n) gen >>=
+      (fun x -> if p x then ret_gen (Some x) else try_ (k+1) (n-1))
+  in sized (try_ 0 % max 1)
+
+let rec such_that p gen =
+  such_that_opt p gen >>= (function
+    | Some x -> ret_gen x
+    | None -> sized (fun n -> resize (n+1) (such_that p gen)))

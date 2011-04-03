@@ -53,3 +53,5 @@ let list_to_string l =
 
 let ( |> ) x f = f x
 let ( <| ) f x = f x
+
+let ( % ) f g = fun x -> f (g x)

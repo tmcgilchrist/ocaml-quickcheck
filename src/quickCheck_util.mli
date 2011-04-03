@@ -36,3 +36,5 @@ val list_to_string : char list -> string
 
 val ( |> ) : 'a -> ('a -> 'b) -> 'b
 val ( <| ) : ('a -> 'b) -> 'a -> 'b
+
+val ( % ) : ('a -> 'b) -> ('c -> 'a) -> 'c -> 'b
