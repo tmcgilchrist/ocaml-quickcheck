@@ -18,7 +18,7 @@ Executable test
   Path: tests/
   Install: false
   CompiledObject: best
-  MainIs: test_list.ml
+  MainIs: test.ml
 
 SourceRepository github
   Type:     git
