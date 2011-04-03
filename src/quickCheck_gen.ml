@@ -1,5 +1,5 @@
 
-open Util
+open QuickCheck_util
 
 type 'a gen = Gen of (int -> 'a)
 

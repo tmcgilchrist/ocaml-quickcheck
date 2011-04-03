@@ -11,10 +11,7 @@ Library quickcheck
   Path:            src
   Modules:         QuickCheck,
                    QuickCheck_gen,
-                   QuickCheck_arbitrary,
-                   QuickCheck_show,
-                   QuickCheck_testable
-  InternalModules: Util
+                   QuickCheck_util
   NativeOpt:       -w @a
   ByteOpt:         -w @a
 
