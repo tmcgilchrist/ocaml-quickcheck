@@ -1,4 +1,8 @@
+
 open QuickCheck
+open Arbitrary
+open Show
+open Testable
 
 let prop_revrev : 'a list -> bool =
   fun xs -> List.rev (List.rev xs) = xs
