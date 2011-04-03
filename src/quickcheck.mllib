@@ -1,8 +1,9 @@
 # OASIS_START
-# DO NOT EDIT (digest: a0fa0f0139c3cd94eb526e91cb3d348f)
+# DO NOT EDIT (digest: db10529ba79a7b73b6ae4303d6acc398)
 QuickCheck
 Util
 Gen
 Arbitrary
 Show
+Testable
 # OASIS_STOP

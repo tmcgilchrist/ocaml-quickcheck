@@ -22,3 +22,4 @@ module Check :
       val quickCheck : T.t -> unit
       val verboseCheck : T.t -> unit
     end
+

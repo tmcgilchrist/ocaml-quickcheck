@@ -10,7 +10,7 @@ BuildTools:      ocamlbuild
 Library quickcheck
   Path:            src
   Modules:         QuickCheck
-  InternalModules: Util, Gen, Arbitrary, Show
+  InternalModules: Util, Gen, Arbitrary, Show, Testable
   NativeOpt:       -w @a
   ByteOpt:         -w @a
 
