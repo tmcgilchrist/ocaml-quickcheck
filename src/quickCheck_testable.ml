@@ -1,7 +1,7 @@
 
-open Show
-open Gen
-open Arbitrary
+open QuickCheck_show
+open QuickCheck_gen
+open QuickCheck_arbitrary
 
 type result = {
   ok : bool option;

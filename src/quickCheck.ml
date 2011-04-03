@@ -1,12 +1,14 @@
 
 open Util
-open Testable
+open QuickCheck_testable
+open QuickCheck_gen
+open QuickCheck_show
 
 type config = {
   maxTest : int;
   maxFail : int;
   size    : int -> int;
-  every   : Format.formatter -> int * Show.pretty_str list -> unit;
+  every   : Format.formatter -> int * pretty_str list -> unit;
 }
 
 let quick = {
@@ -57,7 +59,7 @@ let rec tests config gen ntest nfail stamps =
   else if nfail = config.maxFail
   then done_ "Arguments exhausted after" nfail stamps
   else begin
-    let result = Gen.generate (config.size ntest) gen in
+    let result = generate (config.size ntest) gen in
     let () =
       Format.printf "@[%a@]@?" config.every (ntest, result.arguments)
     in
@@ -83,9 +85,4 @@ module Check(T:TESTABLE) = struct
   let quickCheck  = test
   let verboseCheck = check verbose
 end
-
-module Gen = Gen
-module Show = Show
-module Testable = Testable
-module Arbitrary = Arbitrary
 

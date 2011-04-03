@@ -1,9 +1,9 @@
 # OASIS_START
-# DO NOT EDIT (digest: db10529ba79a7b73b6ae4303d6acc398)
+# DO NOT EDIT (digest: fc8c9bfffce1cef1c3e824f469c5efe3)
 QuickCheck
+QuickCheck_gen
+QuickCheck_arbitrary
+QuickCheck_show
+QuickCheck_testable
 Util
-Gen
-Arbitrary
-Show
-Testable
 # OASIS_STOP

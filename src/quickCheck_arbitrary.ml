@@ -1,6 +1,6 @@
 
-open Gen
 open Util
+open QuickCheck_gen
 
 module type ARBITRARY = sig
   type t

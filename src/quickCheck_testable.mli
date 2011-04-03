@@ -1,14 +1,12 @@
 
-open Gen
-open Arbitrary
 
 type result = {
   ok : bool option;
   stamp : string list;
-  arguments : Show.pretty_str list;
+  arguments : QuickCheck_show.pretty_str list;
 }
 
-type property = Prop of result Gen.gen
+type property = Prop of result QuickCheck_gen.gen
 
 val nothing : result
 
@@ -41,27 +39,27 @@ end
 
 module Evaluate :
   functor (T : TESTABLE) -> sig
-    val evaluate : T.t -> result Gen.gen
+    val evaluate : T.t -> result QuickCheck_gen.gen
   end
 
 module ForAll :
-  functor (S : Show.PSHOW) ->
+  functor (S : QuickCheck_show.PSHOW) ->
     functor (T : TESTABLE) ->
       sig
-        module E : sig val evaluate : T.t -> result Gen.gen end
-        val forAll : S.t Gen.gen -> (S.t -> T.t) -> property
+        module E : sig val evaluate : T.t -> result QuickCheck_gen.gen end
+        val forAll : S.t QuickCheck_gen.gen -> (S.t -> T.t) -> property
       end
 
 module Testable_fun :
-  functor (A : Arbitrary.ARBITRARY) ->
-    functor (S : sig type t = A.t val show : t -> Show.pretty_str end) ->
+  functor (A : QuickCheck_arbitrary.ARBITRARY) ->
+    functor (S : sig type t = A.t val show : t -> QuickCheck_show.pretty_str end) ->
       functor (T : TESTABLE) ->
         sig
           module F : sig
               module E : sig
-                val evaluate : T.t -> result Gen.gen
+                val evaluate : T.t -> result QuickCheck_gen.gen
               end
-              val forAll : S.t Gen.gen -> (S.t -> T.t) -> property
+              val forAll : S.t QuickCheck_gen.gen -> (S.t -> T.t) -> property
           end
           type t = A.t -> T.t
           val property : t -> property
@@ -76,7 +74,7 @@ module Label :
   functor (T : TESTABLE) ->
     sig
       module E : sig
-        val evaluate : T.t -> result Gen.gen
+        val evaluate : T.t -> result QuickCheck_gen.gen
       end
       val label : string -> T.t -> property
     end
@@ -85,7 +83,7 @@ module Classify :
   functor (T : TESTABLE) -> sig
     module L : sig
       module E : sig
-        val evaluate : T.t -> result Gen.gen
+        val evaluate : T.t -> result QuickCheck_gen.gen
       end
       val label : string -> T.t -> property
     end
@@ -94,11 +92,11 @@ module Classify :
   end
 
 module Collect :
-  functor (S : Show.SHOW) ->
+  functor (S : QuickCheck_show.SHOW) ->
     functor (T : TESTABLE) -> sig
       module L : sig
         module E : sig
-          val evaluate : T.t -> result Gen.gen
+          val evaluate : T.t -> result QuickCheck_gen.gen
         end
         val label : string -> T.t -> property
       end

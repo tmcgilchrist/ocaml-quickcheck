@@ -1,8 +1,8 @@
 
 open QuickCheck
-open Arbitrary
-open Show
-open Testable
+open QuickCheck_arbitrary
+open QuickCheck_show
+open QuickCheck_testable
 
 let prop_revrev xs =
   List.rev (List.rev xs) = xs
