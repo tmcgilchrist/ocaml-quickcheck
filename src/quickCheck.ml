@@ -45,15 +45,9 @@ let done_ mesg ntest stamps =
   in
   let not_null = function [] -> false | _ -> true in
   let table =
-    display
-      (List.map entry
-         (List.rev
-            (List.sort compare
-               (List.map pairLength
-                  (List.group
-                     (List.sort compare
-                        (List.filter not_null
-                           stamps)))))))
+    List.filter not_null stamps |> List.sort compare |>
+        List.group |> List.map pairLength |> List.sort compare |>
+            List.rev |> List.map entry |> display
     in
     Format.printf "%s %d tests%s" mesg ntest table
 

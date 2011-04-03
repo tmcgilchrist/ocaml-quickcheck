@@ -50,3 +50,6 @@ let list_to_string l =
   let s = String.create len in
   let i = ref 0 in
   List.iter (fun c -> s.[!i] <- c; incr i) l; s
+
+let ( |> ) x f = f x
+let ( <| ) f x = f x
