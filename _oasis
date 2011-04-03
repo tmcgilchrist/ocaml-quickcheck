@@ -2,9 +2,10 @@ OASISFormat: 0.2
 Name:        ocaml-quickcheck
 Version:     0.0.3
 Synopsis:    Ocaml port of haskell QuickCheck -- probabilistic testing
-Authors:     Alan Falloon
+Authors:     Alan Falloon, Roma Sokolov
 License:     MIT
-Plugins:     DevFiles (0.2), META (0.2)
+LicenseFile: LICENSE
+Plugins:     DevFiles (0.2), META (0.2), StdFiles (0.2)
 BuildTools:      ocamlbuild
 
 Library quickcheck
