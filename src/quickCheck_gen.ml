@@ -73,3 +73,12 @@ let rec such_that p gen =
   such_that_opt p gen >>= (function
     | Some x -> ret_gen x
     | None -> sized (fun n -> resize (n+1) (such_that p gen)))
+
+let frequency w_gens =
+  let total = sum_int <| List.map fst w_gens in
+  let rec pick n lst = match lst with
+    | (k, x)::_tail when n <= k -> x
+    | (k, _)::tail -> pick (n - k) tail
+    | _ -> failwith "pick used with empty list"
+  in choose_int (1, total) >>= (fun n ->
+    pick n w_gens)

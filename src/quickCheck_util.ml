@@ -51,6 +51,8 @@ let list_to_string l =
   let i = ref 0 in
   List.iter (fun c -> s.[!i] <- c; incr i) l; s
 
+let sum_int = List.fold_left (+) 0;;
+
 let ( |> ) x f = f x
 let ( <| ) f x = f x
 

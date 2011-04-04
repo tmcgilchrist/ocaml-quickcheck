@@ -1,3 +1,11 @@
+(*
+ * QuickCheck_gen - different generators
+ *)
+
+(**
+
+   Generator combinator and types.
+**)
 
 type 'a gen = Gen of (int -> 'a)
 (** Generator is just a function of random integer seed to value
@@ -68,3 +76,7 @@ val oneof : 'a gen list -> 'a gen
 *)
 
 val such_that : ('a -> bool) -> 'a gen -> 'a gen
+(** Generates a value, that satisfies a predicate
+*)
+
+val frequency : (int * 'a gen) list -> 'a gen

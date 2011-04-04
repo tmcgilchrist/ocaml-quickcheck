@@ -34,6 +34,8 @@ end
 
 val list_to_string : char list -> string
 
+val sum_int : int list -> int
+
 val ( |> ) : 'a -> ('a -> 'b) -> 'b
 val ( <| ) : ('a -> 'b) -> 'a -> 'b
 
