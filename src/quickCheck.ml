@@ -115,8 +115,7 @@ end
 module Arbitrary_string = struct
   type t = string
   let arbitrary =
-    sized choose_int0 >>=
-      vector Arbitrary_char.arbitrary >>=
+    list Arbitrary_char.arbitrary >>=
       (fun cl -> ret_gen (list_to_string cl))
 end
 
@@ -155,7 +154,7 @@ end
 module Arbitrary_list(Elt:ARBITRARY) = struct
   type t = Elt.t list
   let arbitrary =
-    sized choose_int0 >>= vector Elt.arbitrary
+    list Elt.arbitrary
 end
 
 
