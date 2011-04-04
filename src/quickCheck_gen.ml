@@ -2,12 +2,16 @@
  * QuickCheck_gen - different generators
  *)
 
+(**
+
+   Generator combinator and types.
+
+**)
+
 open QuickCheck_util
 
 type 'a gen = Gen of (int -> 'a)
 
-(* generator functions *)
-(* TODO: document in .mli *)
 
 let sized f = Gen (fun n ->
   let Gen m = f n in
