@@ -82,3 +82,7 @@ let frequency w_gens =
     | _ -> failwith "pick used with empty list"
   in choose_int (1, total) >>= (fun n ->
     pick n w_gens)
+
+let list gen = sized (fun n -> choose_int0 n >>= vector gen)
+
+let list1 gen = sized (fun n -> choose_int (1, max 1 n) >>= vector gen)

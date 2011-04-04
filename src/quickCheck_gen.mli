@@ -80,3 +80,16 @@ val such_that : ('a -> bool) -> 'a gen -> 'a gen
 *)
 
 val frequency : (int * 'a gen) list -> 'a gen
+(** Chooses one of the given generators, with a weighted random
+    distribution. The input list must be non-empty.
+*)
+
+val list : 'a gen -> 'a list gen
+(** Generates a list of random length.
+    The maximum length depends on the size parameter.
+*)
+
+val list1 : 'a gen -> 'a list gen
+(** Generates a non-empty list of random length.
+    The maximum length depends on the size parameter.
+*)
