@@ -8,35 +8,41 @@ module type SHOW = sig
   val show : t -> string
 end
 
-module Show(P:SHOW) = struct
-  type t = P.t
-  let show x = P.show x
-end
+type 'a show = (module SHOW with type ='a)
+
+let show (type a) show v =
+  let module S = (val show : SHOW with type t = a) in
+  S.show v
 
 module Show_bool = struct
   type t = bool
   let show c = Printf.sprintf "%B" c
 end
+let bool = (module Show_bool : SHOW with type t = bool)
 
 module Show_char = struct
   type t = char
   let show c = Printf.sprintf "%C" c
 end
+let char = (module Show_char : SHOW with type t = char)
 
 module Show_string = struct
   type t = string
   let show c = Printf.sprintf "%s" c
 end
+let string = (module Show_char : SHOW with type t = char)
 
 module Show_int = struct
   type t = int
   let show c = Printf.sprintf "%d" c
 end
+let int = (module Show_int : SHOW with type t = int)
 
 module Show_float = struct
   type t = float
   let show c = Printf.sprintf "%f" c
 end
+let float = (module Show_float : SHOW with type t = float)
 
 module Show_pair(Fst:SHOW)(Snd:SHOW) = struct
   type t = Fst.t * Snd.t
