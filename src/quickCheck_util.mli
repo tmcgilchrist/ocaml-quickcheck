@@ -32,7 +32,9 @@ module List : sig
 
 end
 
-val list_to_string : char list -> string
+val charlist_to_string : char list -> string
+
+val join_string_list : string list -> string -> string
 
 val sum_int : int list -> int
 

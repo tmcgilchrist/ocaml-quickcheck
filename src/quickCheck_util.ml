@@ -45,11 +45,21 @@ module List = struct
 
 end
 
-let list_to_string l =
+let charlist_to_string l =
   let len = List.length l in
   let s = String.create len in
   let i = ref 0 in
   List.iter (fun c -> s.[!i] <- c; incr i) l; s
+
+let join_string_list lst sep =
+  let open Printf in
+  let rec to_string l acc =
+    match l with
+      | a::b::[] -> sprintf "%s%s%s %s" acc sep a b
+      | a::b::t -> to_string t (sprintf "%s%s%s %s%s " acc a sep b sep)
+      | a::[] -> sprintf "%s%s" acc a
+      | [] -> acc
+  in to_string lst ""
 
 let sum_int = List.fold_left (+) 0;;
 

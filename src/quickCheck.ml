@@ -116,7 +116,7 @@ module Arbitrary_string = struct
   type t = string
   let arbitrary =
     list Arbitrary_char.arbitrary >>=
-      (fun cl -> ret_gen (list_to_string cl))
+      (fun cl -> ret_gen (charlist_to_string cl))
 end
 
 module Arbitrary_int = struct
