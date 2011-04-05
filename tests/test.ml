@@ -8,13 +8,12 @@ let prop_mem xs = match xs with
   | [] -> true
   | (x::_) -> List.mem x xs
 
-let prop_str_copy s =
-  s = (String.copy s)
+let prop_str_copy s = s = (String.copy s)
 
 (* for generating random int lists *)
 module AL = Arbitrary_list(Arbitrary_int)
 (* for printing out int lists *)
-module SL = PShow_list(PShow_int)
+module SL = Show_list(Show_int)
 (* for being able to test (int list -> bool) *)
 module Testable_list_to_bool =
   Testable_fun
@@ -26,7 +25,7 @@ module CL = Check(Testable_list_to_bool)
 module Testable_str_to_bool =
   Testable_fun
     (Arbitrary_string)
-    (PShow_string)
+    (Show_string)
     (Testable_bool)
 
 module CS = Check(Testable_str_to_bool)

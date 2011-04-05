@@ -1,70 +1,63 @@
 
-type pretty_str = Format.formatter -> unit -> unit
-
-module type PSHOW = sig
-  type t
-  val show : t -> pretty_str
-end
-
 module type SHOW = sig
   type t
   val show : t -> string
 end
 
 module Show :
-  functor (P : PSHOW) -> sig
+  functor (P : SHOW) -> sig
     type t = P.t
     val show : P.t -> string
   end
 
-module PShow_bool : sig
+module Show_bool : sig
   type t = bool
-  val show : bool -> Format.formatter -> unit -> unit
+  val show : bool -> string
 end
 
-module PShow_char : sig
+module Show_char : sig
   type t = char
-  val show : char -> Format.formatter -> unit -> unit
+  val show : char -> string
 end
 
-module PShow_string : sig
+module Show_string : sig
   type t = string
-  val show : string -> Format.formatter -> unit -> unit
+  val show : string -> string
 end
 
-module PShow_int : sig
+module Show_int : sig
   type t = int
-  val show : int -> Format.formatter -> unit -> unit
+  val show : int -> string
 end
 
-module PShow_float : sig
+module Show_float : sig
   type t = float
-  val show : float -> Format.formatter -> unit -> unit
+  val show : float -> string
 end
 
-module PShow_pair :
-  functor (Fst : PSHOW) ->
-    functor (Snd : PSHOW) ->
+module Show_pair :
+  functor (Fst : SHOW) ->
+    functor (Snd : SHOW) ->
       sig
         type t = Fst.t * Snd.t
-        val show : Fst.t * Snd.t -> Format.formatter -> unit -> unit
+        val show : Fst.t * Snd.t -> string
       end
 
-module PShow_triple :
-  functor (Fst : PSHOW) ->
-    functor (Snd : PSHOW) ->
-      functor (Trd : PSHOW) ->
+module Show_triple :
+  functor (Fst : SHOW) ->
+    functor (Snd : SHOW) ->
+      functor (Trd : SHOW) ->
         sig
           type t = Fst.t * Snd.t * Trd.t
           val show :
-            Fst.t * Snd.t * Trd.t -> Format.formatter -> unit -> unit
+            Fst.t * Snd.t * Trd.t -> string
         end
 
-module PShow_list :
-  functor (Elt : PSHOW) ->
+module Show_list :
+  functor (Elt : SHOW) ->
     sig
       type t = Elt.t list
-      val show : Elt.t list -> Format.formatter -> unit -> unit
+      val show : Elt.t list -> string
     end
 
 
@@ -131,7 +124,7 @@ module Arbitrary_list :
 type result = {
   ok : bool option;
   stamp : string list;
-  arguments : pretty_str list;
+  arguments : string list;
 }
 
 type property = Prop of result QuickCheck_gen.gen
@@ -171,16 +164,17 @@ module Evaluate :
   end
 
 module ForAll :
-  functor (S : PSHOW) ->
+  functor (S : SHOW) ->
     functor (T : TESTABLE) ->
       sig
         module E : sig val evaluate : T.t -> result QuickCheck_gen.gen end
         val forAll : S.t QuickCheck_gen.gen -> (S.t -> T.t) -> property
       end
 
+(* boo *)
 module Testable_fun :
   functor (A : ARBITRARY) ->
-    functor (S : sig type t = A.t val show : t -> pretty_str end) ->
+    functor (S : SHOW with type t = A.t) ->
       functor (T : TESTABLE) ->
         sig
           module F : sig
@@ -238,7 +232,7 @@ type config = {
   maxTest : int;
   maxFail : int;
   size : int -> int;
-  every : Format.formatter -> int * pretty_str list -> unit;
+  every : Format.formatter -> int * string list -> unit;
 }
 
 val quick : config

@@ -3,92 +3,60 @@ open QuickCheck_util
 open QuickCheck_gen
 
 
-type pretty_str = Format.formatter -> unit -> unit
-
-module type PSHOW = sig
-  type t
-  val show : t -> pretty_str
-end
-
 module type SHOW = sig
   type t
   val show : t -> string
 end
 
-module Show(P:PSHOW) = struct
+module Show(P:SHOW) = struct
   type t = P.t
-  let show x  =
-    let f _ =
-      let str = Buffer.contents Format.stdbuf in
-      Buffer.clear Format.stdbuf;
-      str
-    in
-    Buffer.clear Format.stdbuf;
-    Format.kfprintf f Format.str_formatter "@[%a@]@?" (P.show x) ()
+  let show x = P.show x
 end
 
-module PShow_bool = struct
+module Show_bool = struct
   type t = bool
-  let show c fmt () =
-    Format.fprintf fmt "%B" c
+  let show c = Printf.sprintf "%B" c
 end
 
-module PShow_char = struct
+module Show_char = struct
   type t = char
-  let show c fmt () =
-    Format.fprintf fmt "%C" c
+  let show c = Printf.sprintf "%C" c
 end
 
-module PShow_string = struct
+module Show_string = struct
   type t = string
-  let show c fmt () =
-    Format.fprintf fmt "%s" c
+  let show c = Printf.sprintf "%s" c
 end
 
-module PShow_int = struct
+module Show_int = struct
   type t = int
-  let show c fmt () =
-    Format.fprintf fmt "%d" c
+  let show c = Printf.sprintf "%d" c
 end
 
-module PShow_float = struct
+module Show_float = struct
   type t = float
-  let show c fmt () =
-    Format.fprintf fmt "%f" c
+  let show c = Printf.sprintf "%f" c
 end
 
-module PShow_pair(Fst:PSHOW)(Snd:PSHOW) = struct
+module Show_pair(Fst:SHOW)(Snd:SHOW) = struct
   type t = Fst.t * Snd.t
-  let show (l,r) fmt () =
+  let show (l,r) =
     let (sl, sr) = (Fst.show l, Snd.show r) in
-    let pp = Format.fprintf in
-    let snd f i = pp f ", %a" i () in
-    Format.fprintf fmt "(%a%a)" sl () snd sr
+    Printf.sprintf "(%s, %s)" sl sr
 end
 
-module PShow_triple(Fst:PSHOW)(Snd:PSHOW)(Trd:PSHOW) = struct
+module Show_triple(Fst:SHOW)(Snd:SHOW)(Trd:SHOW) = struct
   type t = Fst.t * Snd.t * Trd.t
-  let show (f, s, t) fmt () =
+  let show (f, s, t) =
     let (sf, ss, st) = (Fst.show f, Snd.show s, Trd.show t) in
-    let pp = Format.fprintf in
-    let trd ft i = pp ft ", %a" i () in
-    let snd ft i = pp ft ", %a%a" i () trd st in
-    Format.fprintf fmt "(%a%a)" sf () snd ss
+    Printf.sprintf "(%s, %s, %s)" sf ss st
 end
 
-module PShow_list(Elt:PSHOW) = struct
+module Show_list(Elt:SHOW) = struct
   type t = Elt.t list
-  let show xs fmt () =
-    let pp = Format.fprintf in
-    match List.map Elt.show xs with
-      | [] -> pp fmt "[]"
-      | a1::an ->
-        let pprest f =
-          List.iter (fun e -> pp f ";@ %a" e ())
-        in
-        pp fmt "[%a%a]" a1 () pprest an
+  let show xs =
+    Printf.sprintf "[%s]" (join_string_list (List.map Elt.show xs) ";")
 end
-
 
 module type ARBITRARY = sig
   type t
@@ -161,7 +129,7 @@ end
 type result = {
   ok : bool option;
   stamp : string list;
-  arguments : pretty_str list;
+  arguments : string list;
 }
 
 type property = Prop of result gen
@@ -203,7 +171,7 @@ module Evaluate(T:TESTABLE) = struct
       gen
 end
 
-module ForAll(S:PSHOW)(T:TESTABLE) = struct
+module ForAll(S:SHOW)(T:TESTABLE) = struct
   module E = Evaluate(T)
   let forAll : S.t gen -> (S.t -> T.t) -> property =
   fun gen body ->
@@ -218,7 +186,7 @@ end
 
 module Testable_fun
   (A:ARBITRARY)
-  (S:PSHOW with type t = A.t)
+  (S:SHOW with type t = A.t)
   (T:TESTABLE) =
 struct
   module F = ForAll(S)(T)
@@ -266,7 +234,7 @@ type config = {
   maxTest : int;
   maxFail : int;
   size    : int -> int;
-  every   : Format.formatter -> int * pretty_str list -> unit;
+  every   : Format.formatter -> int * string list -> unit;
 }
 
 let quick = {
@@ -280,7 +248,7 @@ let verbose = {
   quick with
     every = begin fun f (n, args) ->
       let pargs fmt l =
-        List.iter (fun a -> Format.fprintf fmt "@ %a" a ()) l
+        List.iter (fun a -> Format.fprintf fmt "@ %s" a) l
       in
       Format.fprintf f "@[%d:@[<hov 2>%a@]@]@." n pargs args
     end
@@ -327,12 +295,8 @@ let rec tests config gen ntest nfail stamps =
       | Some true ->
         tests config gen (ntest+1) nfail (result.stamp :: stamps)
       | Some false ->
-        let p f l = match l with
-          | [] -> ()
-          | h::t ->
-            h f (); List.iter (fun s -> Format.fprintf f "@ %a" s ()) t in
-        Format.printf "@[<2>Falsifiable, after %d tests:@ %a@]@."
-          ntest p result.arguments
+        Format.printf "@[<2>Falsifiable, after %d tests:\n %s."
+          ntest (join_string_list result.arguments "\n")
   end
 
 module Check(T:TESTABLE) = struct
