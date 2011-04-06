@@ -11,28 +11,21 @@ let prop_mem xs = match xs with
 let prop_str_copy s = s = (String.copy s)
 
 (* for generating random int lists *)
-module AL = Arbitrary_list(Arbitrary_int)
+let al = arbitrary_list arbitrary_int
+
 (* for printing out int lists *)
-module SL = Show_list(Show_int)
+let sl = show_list show_int
+
 (* for being able to test (int list -> bool) *)
-module Testable_list_to_bool =
-  Testable_fun
-    (AL)
-    (SL)
-    (Testable_bool)
-module CL = Check(Testable_list_to_bool)
+let testable_list_to_bool = testable_fun al sl testable_bool
 
-module Testable_str_to_bool =
-  Testable_fun
-    (Arbitrary_string)
-    (Show_string)
-    (Testable_bool)
+let cl = quickCheck testable_list_to_bool
 
-module CS = Check(Testable_str_to_bool)
-
+let testable_str_to_bool = testable_fun arbitrary_string show_string testable_bool
+let cs = quickCheck testable_str_to_bool
 
 let () =
-  CL.quickCheck prop_revrev;
-  CL.quickCheck prop_mem;
-  CS.quickCheck prop_str_copy
+  cl prop_revrev;
+  cl prop_mem;
+  cs prop_str_copy
 
