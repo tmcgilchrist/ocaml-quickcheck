@@ -3,128 +3,56 @@ open QuickCheck_util
 open QuickCheck_gen
 
 
-module type SHOW = sig
-  type t
-  val show : t -> string
-end
+type 'a show = 'a -> string
 
-module Show(P:SHOW) = struct
-  type t = P.t
-  let show x = P.show x
-end
+let show_bool = Printf.sprintf "%B"
 
-module Show_bool = struct
-  type t = bool
-  let show c = Printf.sprintf "%B" c
-end
+let show_char = Printf.sprintf "%C"
 
-module Show_char = struct
-  type t = char
-  let show c = Printf.sprintf "%C" c
-end
+let show_string x = x
 
-module Show_string = struct
-  type t = string
-  let show c = Printf.sprintf "%s" c
-end
+let show_int = string_of_int
 
-module Show_int = struct
-  type t = int
-  let show c = Printf.sprintf "%d" c
-end
+let show_float = string_of_float
 
-module Show_float = struct
-  type t = float
-  let show c = Printf.sprintf "%f" c
-end
+let show_pair show_fst show_snd (fst, snd) =
+  let (sfst, ssnd) = (show_fst fst, show_snd snd) in
+  Printf.sprintf "(%s, %s)" sfst ssnd
 
-module Show_pair(Fst:SHOW)(Snd:SHOW) = struct
-  type t = Fst.t * Snd.t
-  let show (l,r) =
-    let (sl, sr) = (Fst.show l, Snd.show r) in
-    Printf.sprintf "(%s, %s)" sl sr
-end
+let show_triple show_fst show_snd show_trd (fst, snd, trd) =
+  let (sf, ss, st) = (show_fst fst, show_snd snd, show_trd trd) in
+  Printf.sprintf "(%s, %s, %s)" sf ss st
 
-module Show_triple(Fst:SHOW)(Snd:SHOW)(Trd:SHOW) = struct
-  type t = Fst.t * Snd.t * Trd.t
-  let show (f, s, t) =
-    let (sf, ss, st) = (Fst.show f, Snd.show s, Trd.show t) in
-    Printf.sprintf "(%s, %s, %s)" sf ss st
-end
+let show_list show_elt lst =
+  Printf.sprintf "[%s]" (join_string_list (List.map show_elt xs) ";")
 
-module Show_list(Elt:SHOW) = struct
-  type t = Elt.t list
-  let show xs =
-    Printf.sprintf "[%s]" (join_string_list (List.map Elt.show xs) ";")
-end
+type 'a arbitrary = 'a gen
 
-module type ARBITRARY = sig
-  type t
-  val arbitrary : t gen
-end
+let arbitrary_unit = ret_gen ()
 
-module Arbitrary_unit = struct
-  type t = unit
-  let arbitrary = ret_gen ()
-end
+let arbitrary_bool = elements [true; false]
 
-module Arbitrary_bool = struct
-  type t = bool
-  let arbitrary = elements [true; false]
-end
+let arbitrary_char = choose_int (32,255) >>= fun c -> ret_gen (Char.chr c)
 
-module Arbitrary_char = struct
-  type t = char
-  let arbitrary =
-    choose_int (32,255) >>= fun c ->
-      ret_gen (Char.chr c)
-end
+let arbitrary_string = list arbitrary_char >>= (fun cl ->
+  ret_gen (charlist_to_string cl))
 
-module Arbitrary_string = struct
-  type t = string
-  let arbitrary =
-    list Arbitrary_char.arbitrary >>=
-      (fun cl -> ret_gen (charlist_to_string cl))
-end
+let arbitrary_int = sized (fun n -> choose_int (-n, n))
 
-module Arbitrary_int = struct
-  type t = int
-  let arbitrary = sized (fun n -> choose_int (-n, n))
-end
+let arbitrary_float = arbitrary_int >>= fun a -> arbitrary_int >>= fun b ->
+  sized choose_int0 >>= fun c -> ret_gen
+  (float a +. (float b /. (float c +. 1.)))
 
-module Arbitrary_float = struct
-  type t = float
-  let arbitrary =
-    Arbitrary_int.arbitrary >>= fun a ->
-      Arbitrary_int.arbitrary >>= fun b ->
-        sized choose_int0 >>= fun c ->
-          ret_gen
-            (float a +. (float b /. (float c +. 1.)))
-end
+let arbitrary_pair arbitrary_fst arbitrary_snd =
+  arbitrary_fst >>= fun v1 -> arbitrary_snd >>= fun v2 -> ret_gen (v1,v2)
 
-module Aribitrary_pair(Fst:ARBITRARY)(Snd:ARBITRARY) = struct
-  type t = Fst.t * Snd.t
-  let arbitrary =
-    Fst.arbitrary >>= fun v1 ->
-      Snd.arbitrary >>= fun v2 ->
-        ret_gen (v1,v2)
-end
+let arbitrary_triple arbitrary_fst arbitrary_snd arbitrary_trd =
+  arbitrary_fst >>= fun v1 ->
+  arbitrary_snd >>= fun v2 ->
+  arbitrary_trd >>= fun v3 ->
+  ret_gen (v1,v2,v3)
 
-module Aribitrary_triple(Fst:ARBITRARY)(Snd:ARBITRARY)(Trd:ARBITRARY) = struct
-  type t = Fst.t * Snd.t * Trd.t
-  let arbitrary =
-    Fst.arbitrary >>= fun v1 ->
-      Snd.arbitrary >>= fun v2 ->
-        Trd.arbitrary >>= fun v3 ->
-          ret_gen (v1,v2,v3)
-end
-
-module Arbitrary_list(Elt:ARBITRARY) = struct
-  type t = Elt.t list
-  let arbitrary =
-    list Elt.arbitrary
-end
-
+let arbitrary_list arbitrary_elt = list arbitrary_elt
 
 type result = {
   ok : bool option;
@@ -134,10 +62,7 @@ type result = {
 
 type property = Prop of result gen
 
-module type TESTABLE = sig
-  type t
-  val property : t -> property
-end
+type 'a testable = 'a -> property
 
 let nothing : result = {ok=None; stamp=[]; arguments=[]}
 
