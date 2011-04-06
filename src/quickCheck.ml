@@ -24,7 +24,7 @@ let show_triple show_fst show_snd show_trd (fst, snd, trd) =
   Printf.sprintf "(%s, %s, %s)" sf ss st
 
 let show_list show_elt lst =
-  Printf.sprintf "[%s]" (join_string_list (List.map show_elt xs) ";")
+  Printf.sprintf "[%s]" (join_string_list (List.map show_elt lst) ";")
 
 type 'a arbitrary = 'a gen
 
@@ -69,91 +69,53 @@ let nothing : result = {ok=None; stamp=[]; arguments=[]}
 let result : result -> property =
   fun res -> Prop (ret_gen res)
 
-module Testable_unit = struct
-  type t = unit
-  let property () = result nothing
-end
 
-module Testable_bool = struct
-  type t = bool
-  let property b = result {nothing with ok=Some b}
-end
+let testable_unit () = result nothing
 
-module Testable_result = struct
-  type t = result
-  let property r = result r
-end
+let testable_bool b = result {nothing with ok=Some b}
 
-module Testable_property = struct
-  type t = property
-  let property p = p
-end
+let testable_tesult r = result r
 
-module Evaluate(T:TESTABLE) = struct
-  let evaluate : T.t -> result gen =
-    fun a ->
-      let Prop gen = T.property a in
-      gen
-end
+let testable_property p = p
 
-module ForAll(S:SHOW)(T:TESTABLE) = struct
-  module E = Evaluate(T)
-  let forAll : S.t gen -> (S.t -> T.t) -> property =
-  fun gen body ->
-    let argument a res =
-      { res with arguments = S.show a ::res.arguments }
-    in
-    Prop
-      (gen >>= fun a ->
-         E.evaluate (body a) >>= fun res ->
-           ret_gen (argument a res))
-end
+let evaluate testable arg =
+  let Prop gen = testable arg in
+  gen
 
-module Testable_fun
-  (A:ARBITRARY)
-  (S:SHOW with type t = A.t)
-  (T:TESTABLE) =
-struct
-  module F = ForAll(S)(T)
-  type t = A.t -> T.t
-  let property : t -> property =
-    fun f ->
-      F.forAll A.arbitrary f
-end
+let for_all show testable gen body =
+  let eval = evaluate testable in
+  let argument a res =
+    {res with arguments = (show a)::res.arguments }
+  in
+  Prop (gen >>= (fun a ->
+    eval (body a) >>= (fun res ->
+      ret_gen (argument a res)))
+  )
 
-module Implies(T:TESTABLE) = struct
-  let (==>) : bool -> T.t -> property =
-    fun b a ->
-      if b
-      then T.property a
-      else Testable_unit.property ()
-end
+let testable_fun arbitrary show testable f =
+  for_all show testable arbitrary f
 
-module Label(T:TESTABLE) = struct
-  module E = Evaluate(T)
-  let label : string -> T.t -> property =
-    fun s a ->
-      let add r = {r with stamp = s :: r.stamp } in
-      let a' = E.evaluate a in
-      Prop (map_gen add a')
-end
+let implies testable b a =
+  if b then testable a
+  else testable_unit ()
+(* ==> *)
 
-module Classify(T:TESTABLE) = struct
-  module L = Label(T)
-  let classify : bool -> string -> T.t -> property =
-    function
-        true -> L.label
-      | false -> fun _ -> T.property
-  let trivial : bool -> T.t -> property =
-    fun b -> classify b "trivial"
-end
+let label testable s a =
+  let eval = evaluate testable in
+  let add r = {r with stamp = s :: r.stamp } in
+  let a' = eval a in
+  Prop (map_gen add a')
 
-module Collect(S:SHOW)(T:TESTABLE) = struct
-  module L = Label(T)
-  let collect : S.t -> T.t -> property =
-    fun v -> L.label (S.show v)
-end
+let classify testable b =
+  let lbl = label testable in
+  if b then lbl
+  else (fun _ -> testable)
 
+let trivial testable b =
+  classify testable b "trivial"
+
+let collect show testable sv tv =
+  (label testable) (show sv) tv
 
 type config = {
   maxTest : int;
@@ -224,12 +186,10 @@ let rec tests config gen ntest nfail stamps =
           ntest (join_string_list result.arguments "\n")
   end
 
-module Check(T:TESTABLE) = struct
-  module E=Evaluate(T)
-  let check config a =
-    tests config (E.evaluate a) 0 0 []
-  let test = check quick
-  let quickCheck  = test
-  let verboseCheck = check verbose
-end
+let check testable cfg a =
+  let eval = evaluate testable in
+  tests cfg (eval a) 0 0 []
+
+let quickCheck testable = check testable quick
+let verboseCheck testable = check testable verbose
 

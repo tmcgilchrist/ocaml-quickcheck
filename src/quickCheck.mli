@@ -51,104 +51,36 @@ type result = {
 
 type property = Prop of result QuickCheck_gen.gen
 
+type 'a testable = 'a -> property
+
 val nothing : result
 
 val result : result -> property
 
-module type TESTABLE = sig
-  type t
-  val property : t -> property
-end
+val testable_unit : unit testable
 
-module Testable_unit : sig
-  type t = unit
-  val property : unit -> property
-end
+val testable_bool : bool testable
 
-module Testable_bool : sig
-  type t = bool
-  val property : bool -> property
-end
+val testable_tesult : result testable
 
-module Testable_result : sig
-  type t = result
-  val property : result -> property
-end
+val testable_property : property testable
 
-module Testable_property : sig
-  type t = property
-  val property : 'a -> 'a
-end
+val evaluate : 'a testable -> 'a -> result QuickCheck_gen.gen
 
-module Evaluate :
-  functor (T : TESTABLE) -> sig
-    val evaluate : T.t -> result QuickCheck_gen.gen
-  end
+val for_all : 'a show -> 'b testable -> 'a QuickCheck_gen.gen -> ('a -> 'b) -> property
 
-module ForAll :
-  functor (S : SHOW) ->
-    functor (T : TESTABLE) ->
-      sig
-        module E : sig val evaluate : T.t -> result QuickCheck_gen.gen end
-        val forAll : S.t QuickCheck_gen.gen -> (S.t -> T.t) -> property
-      end
+val testable_fun : 'a arbitrary -> 'a show -> 'b testable -> ('a -> 'b) testable
 
-(* boo *)
-module Testable_fun :
-  functor (A : ARBITRARY) ->
-    functor (S : SHOW with type t = A.t) ->
-      functor (T : TESTABLE) ->
-        sig
-          module F : sig
-              module E : sig
-                val evaluate : T.t -> result QuickCheck_gen.gen
-              end
-              val forAll : S.t QuickCheck_gen.gen -> (S.t -> T.t) -> property
-          end
-          type t = A.t -> T.t
-          val property : t -> property
-        end
+val implies : 'a testable -> bool -> 'a testable
 
-module Implies :
-  functor (T : TESTABLE) -> sig
-    val ( ==> ) : bool -> T.t -> property
-  end
+val label : 'a testable -> string -> 'a testable
 
-module Label :
-  functor (T : TESTABLE) ->
-    sig
-      module E : sig
-        val evaluate : T.t -> result QuickCheck_gen.gen
-      end
-      val label : string -> T.t -> property
-    end
+val classify : 'a testable -> bool -> string -> 'a testable
 
-module Classify :
-  functor (T : TESTABLE) -> sig
-    module L : sig
-      module E : sig
-        val evaluate : T.t -> result QuickCheck_gen.gen
-      end
-      val label : string -> T.t -> property
-    end
-    val classify : bool -> string -> T.t -> property
-    val trivial : bool -> T.t -> property
-  end
+val trivial : 'a testable -> bool -> 'a testable
 
-module Collect :
-  functor (S : SHOW) ->
-    functor (T : TESTABLE) -> sig
-      module L : sig
-        module E : sig
-          val evaluate : T.t -> result QuickCheck_gen.gen
-        end
-        val label : string -> T.t -> property
-      end
-      val collect : S.t -> T.t -> property
-    end
-
-
-
+val collect : 'a show -> 'b testable -> 'a -> 'b -> property
+                                              (* 'b property  *)
 
 type config = {
   maxTest : int;
@@ -167,15 +99,7 @@ val tests : config ->
   string list list ->
   unit
 
-module Check :
-  functor (T : TESTABLE) ->
-    sig
-      module E : sig
-        val evaluate : T.t -> result QuickCheck_gen.gen
-      end
-      val check : config -> T.t -> unit
-      val test : T.t -> unit
-      val quickCheck : T.t -> unit
-      val verboseCheck : T.t -> unit
-    end
+val check : 'a testable -> config -> 'a -> unit
+val quickCheck : 'a testable -> 'a -> unit
+val verboseCheck : 'a testable -> 'a -> unit
 
