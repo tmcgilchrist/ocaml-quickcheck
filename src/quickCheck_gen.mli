@@ -51,6 +51,10 @@ val choose_int : int * int -> int gen
 (** Chooses integer value from given range
 *)
 
+val choose_int32 : int32 * int32 -> int32 gen
+(** Chooses integer 32bit value from given range
+*)
+
 val choose_int0 : int -> int gen
 (** Chooses integer value from 0 to given high mark
 *)

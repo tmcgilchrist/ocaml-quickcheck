@@ -47,6 +47,7 @@ let (>>=) (Gen m) k =
 let lift_gen f a = Gen (fun _ -> f a)
 
 let choose_int = lift_gen Random.int_range
+let choose_int32 = lift_gen Random.int32_range
 let choose_int0 = lift_gen Random.int
 let choose_char = lift_gen Random.char_range
 let choose_float = lift_gen Random.float_range
