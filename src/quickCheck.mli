@@ -25,7 +25,11 @@ val arbitrary_bool : bool QuickCheck_gen.gen
 
 val arbitrary_char : char QuickCheck_gen.gen
 
+val arbitrary_byte : char QuickCheck_gen.gen
+
 val arbitrary_string : string QuickCheck_gen.gen
+
+val arbitrary_bytesequence : string QuickCheck_gen.gen
 
 val arbitrary_int : int QuickCheck_gen.gen
 

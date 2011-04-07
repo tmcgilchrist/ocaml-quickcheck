@@ -34,7 +34,12 @@ let arbitrary_bool = elements [true; false]
 
 let arbitrary_char = choose_int (32,255) >>= fun c -> ret_gen (Char.chr c)
 
+let arbitrary_byte = choose_int (0,255) >>= fun c -> ret_gen (Char.chr c)
+
 let arbitrary_string = list arbitrary_char >>= (fun cl ->
+  ret_gen (charlist_to_string cl))
+
+let arbitrary_bytesequence = list arbitrary_byte >>= (fun cl ->
   ret_gen (charlist_to_string cl))
 
 let arbitrary_int = sized (fun n -> choose_int (-n, n))
