@@ -35,6 +35,8 @@ val arbitrary_int : int QuickCheck_gen.gen
 
 val arbitrary_int32 : int32 QuickCheck_gen.gen
 
+val arbitrary_int64 : int64 QuickCheck_gen.gen
+
 val arbitrary_float : float QuickCheck_gen.gen
 
 val arbitrary_pair : 'a arbitrary ->

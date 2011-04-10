@@ -47,6 +47,9 @@ let arbitrary_int = sized (fun n -> choose_int (-n, n))
 let arbitrary_int32 = arbitrary_int >>= fun a -> arbitrary_int >>= fun b->
   ret_gen Int32.(add (of_int a) (of_int b))
 
+let arbitrary_int64 = arbitrary_int32 >>= fun a -> arbitrary_int32 >>= fun b->
+  ret_gen Int64.(add (of_int32 a) (of_int32 b))
+
 let arbitrary_float = arbitrary_int >>= fun a -> arbitrary_int >>= fun b ->
   sized choose_int0 >>= fun c -> ret_gen
   (float a +. (float b /. (float c +. 1.)))
