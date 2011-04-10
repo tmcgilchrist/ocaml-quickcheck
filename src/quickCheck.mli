@@ -9,6 +9,10 @@ val show_string : string show
 
 val show_int : int show
 
+val show_int32 : int32 show
+
+val show_int64 : int64 show
+
 val show_float : float show
 
 val show_pair : 'a show -> 'b show -> 'a * 'b -> string

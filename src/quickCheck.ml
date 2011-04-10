@@ -13,6 +13,10 @@ let show_string x = Printf.sprintf "\"%s\"" x
 
 let show_int = string_of_int
 
+let show_int32 = Int32.to_string
+
+let show_int64 = Int64.to_string
+
 let show_float = string_of_float
 
 let show_pair show_fst show_snd (fst, snd) =
