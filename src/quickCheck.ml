@@ -9,7 +9,7 @@ let show_bool = Printf.sprintf "%B"
 
 let show_char = Printf.sprintf "%C"
 
-let show_string x = Printf.printf "\"%s\"" x
+let show_string x = Printf.sprintf "\"%s\"" x
 
 let show_int = string_of_int
 
@@ -175,6 +175,7 @@ let done_ mesg ntest stamps =
     Format.printf "%s %d tests%s" mesg ntest table
 
 let rec tests config gen ntest nfail stamps =
+  let () = Random.self_init () in
   if ntest = config.maxTest
   then done_ "OK, passed" ntest stamps
   else if nfail = config.maxFail
