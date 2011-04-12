@@ -9,7 +9,7 @@ let show_bool = Printf.sprintf "%B"
 
 let show_char = Printf.sprintf "%C"
 
-let show_string x = Printf.sprintf "\"%s\"" x
+let show_string x = Printf.sprintf "\"%s\"" (String.escaped x)
 
 let show_int = string_of_int
 

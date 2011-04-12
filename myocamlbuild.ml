@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: b73d76b17e0bf4cbb0c95f9792549692) *)
+(* DO NOT EDIT (digest: 24a473cb64f0de545b6731ce0e61cb48) *)
 module OASISGettext = struct
 # 21 "/home/typhon/kamlo/oasis/src/oasis/OASISGettext.ml"
   
@@ -456,17 +456,17 @@ let package_default =
      flags =
        [
           (["oasis_library_quickcheck_byte"; "ocaml"; "link"; "byte"],
-            [(OASISExpr.EBool true, S [A "-w"; A "@a"])]);
+            [(OASISExpr.EBool true, S [A "-w"; A "@a"; A "-g"])]);
           (["oasis_library_quickcheck_native"; "ocaml"; "link"; "native"],
-            [(OASISExpr.EBool true, S [A "-w"; A "@a"])]);
+            [(OASISExpr.EBool true, S [A "-w"; A "@a"; A "-g"])]);
           (["oasis_library_quickcheck_byte"; "ocaml"; "ocamldep"; "byte"],
-            [(OASISExpr.EBool true, S [A "-w"; A "@a"])]);
+            [(OASISExpr.EBool true, S [A "-w"; A "@a"; A "-g"])]);
           (["oasis_library_quickcheck_native"; "ocaml"; "ocamldep"; "native"],
-            [(OASISExpr.EBool true, S [A "-w"; A "@a"])]);
+            [(OASISExpr.EBool true, S [A "-w"; A "@a"; A "-g"])]);
           (["oasis_library_quickcheck_byte"; "ocaml"; "compile"; "byte"],
-            [(OASISExpr.EBool true, S [A "-w"; A "@a"])]);
+            [(OASISExpr.EBool true, S [A "-w"; A "@a"; A "-g"])]);
           (["oasis_library_quickcheck_native"; "ocaml"; "compile"; "native"],
-            [(OASISExpr.EBool true, S [A "-w"; A "@a"])])
+            [(OASISExpr.EBool true, S [A "-w"; A "@a"; A "-g"])])
        ];
      }
   ;;
