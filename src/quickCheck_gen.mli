@@ -97,3 +97,7 @@ val list1 : 'a gen -> 'a list gen
 (** Generates a non-empty list of random length.
     The maximum length depends on the size parameter.
 *)
+
+val listN : int -> 'a gen -> 'a list gen
+(** Generate list of arbitrary elements with given length
+*)

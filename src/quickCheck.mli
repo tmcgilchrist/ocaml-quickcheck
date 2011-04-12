@@ -35,6 +35,10 @@ val arbitrary_string : string QuickCheck_gen.gen
 
 val arbitrary_bytesequence : string QuickCheck_gen.gen
 
+val arbitrary_stringN : int -> string QuickCheck_gen.gen
+
+val arbitrary_bytesequenceN : int -> string QuickCheck_gen.gen
+
 val arbitrary_int : int QuickCheck_gen.gen
 
 val arbitrary_int32 : int32 QuickCheck_gen.gen
@@ -54,6 +58,7 @@ val arbitrary_triple : 'a arbitrary ->
 
 val arbitrary_list : 'a arbitrary -> 'a list QuickCheck_gen.gen
 
+val arbitrary_listN : int -> 'a QuickCheck_gen.gen -> 'a list QuickCheck_gen.gen
 
 type result = {
   ok : bool option;

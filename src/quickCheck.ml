@@ -13,9 +13,9 @@ let show_string x = Printf.sprintf "\"%s\"" (String.escaped x)
 
 let show_int = string_of_int
 
-let show_int32 = Int32.to_string
+let show_int32 = Printf.sprintf "%ldl"
 
-let show_int64 = Int64.to_string
+let show_int64 = Printf.sprintf "%LdL"
 
 let show_float = string_of_float
 
@@ -46,6 +46,12 @@ let arbitrary_string = list arbitrary_char >>= (fun cl ->
 let arbitrary_bytesequence = list arbitrary_byte >>= (fun cl ->
   ret_gen (charlist_to_string cl))
 
+let arbitrary_stringN n = (listN n arbitrary_char) >>= (fun cl ->
+  ret_gen (charlist_to_string cl))
+
+let arbitrary_bytesequenceN n = (listN n arbitrary_byte) >>= (fun cl ->
+  ret_gen (charlist_to_string cl))
+
 let arbitrary_int = sized (fun n -> choose_int (-n, n))
 
 let arbitrary_int32 = arbitrary_int >>= fun a -> arbitrary_int >>= fun b->
@@ -68,6 +74,8 @@ let arbitrary_triple arbitrary_fst arbitrary_snd arbitrary_trd =
   ret_gen (v1,v2,v3)
 
 let arbitrary_list arbitrary_elt = list arbitrary_elt
+
+let arbitrary_listN n arbitrary_elt = listN n arbitrary_elt
 
 type result = {
   ok : bool option;

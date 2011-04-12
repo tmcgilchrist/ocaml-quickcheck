@@ -87,3 +87,5 @@ let frequency w_gens =
 let list gen = sized (fun n -> choose_int0 n >>= vector gen)
 
 let list1 gen = sized (fun n -> choose_int (1, max 1 n) >>= vector gen)
+
+let listN n gen = resize n (sized (fun n -> vector gen n))
