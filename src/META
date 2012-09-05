@@ -1,9 +1,11 @@
 # OASIS_START
-# DO NOT EDIT (digest: 8d5bcd030712a232b4596239efea364c)
+# DO NOT EDIT (digest: ce0d96055045db37843aeec987461f57)
 version = "0.0.3"
 description = "Ocaml port of haskell QuickCheck -- probabilistic testing"
 archive(byte) = "quickcheck.cma"
+archive(byte, plugin) = "quickcheck.cma"
 archive(native) = "quickcheck.cmxa"
+archive(native, plugin) = "quickcheck.cmxs"
 exists_if = "quickcheck.cma"
 # OASIS_STOP
 
