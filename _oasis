@@ -21,6 +21,7 @@ Executable test
   Install: false
   CompiledObject: best
   MainIs: test.ml
+  BuildDepends: quickcheck
 
 SourceRepository github
   Type:     git
