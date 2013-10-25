@@ -26,3 +26,5 @@
 <tests/*.ml{,i}>: use_quickcheck
 <tests/*.ml{,i}>: pkg_optcomp
 # OASIS_STOP
+
+<src/quickCheck_util.*>: syntax_camlp4o
