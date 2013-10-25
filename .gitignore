@@ -1,6 +1,8 @@
 _build
 setup.data
 setup.log
+*.native
+*.byte
 src/config.*
 *.ba*
 gen.hs

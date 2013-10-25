@@ -1,10 +1,25 @@
 # OASIS_START
-# DO NOT EDIT (digest: c170a531ed6bc43d2bf2b089bee1a87f)
+# DO NOT EDIT (digest: 9b4545861667a17854e792656250a918)
+# Ignore VCS directories, you can use the same kind of rule outside 
+# OASIS_START/STOP if you want to exclude directories that contains 
+# useless stuff for the build process
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
 # Library quickcheck
-"src": include
+"src/quickcheck.cmxs": use_quickcheck
 <src/quickcheck.{cma,cmxa}>: oasis_library_quickcheck_byte
 <src/*.ml{,i}>: oasis_library_quickcheck_byte
 <src/quickcheck.{cma,cmxa}>: oasis_library_quickcheck_native
 <src/*.ml{,i}>: oasis_library_quickcheck_native
 # Executable test
+<tests/test.{native,byte}>: use_quickcheck
+<tests/*.ml{,i}>: use_quickcheck
 # OASIS_STOP
