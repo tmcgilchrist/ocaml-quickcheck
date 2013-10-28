@@ -1,7 +1,7 @@
 # OASIS_START
-# DO NOT EDIT (digest: ba3cc544513bd4bc13b4678fa4cbb20d)
-version = "0.0.3"
-description = "Ocaml port of haskell QuickCheck -- probabilistic testing"
+# DO NOT EDIT (digest: d9303a0ecb8631fea5542cef00ef0e16)
+version = "1.0.0"
+description = "OCaml port of Haskell QuickCheck for probabilistic testing"
 requires = "optcomp"
 archive(byte) = "quickcheck.cma"
 archive(byte, plugin) = "quickcheck.cma"
