@@ -38,7 +38,6 @@ val join_string_list : string list -> string -> string
 
 val sum_int : int list -> int
 
-val ( |> ) : 'a -> ('a -> 'b) -> 'b
 val ( <| ) : ('a -> 'b) -> 'a -> 'b
 
 val ( % ) : ('a -> 'b) -> ('c -> 'a) -> 'c -> 'b

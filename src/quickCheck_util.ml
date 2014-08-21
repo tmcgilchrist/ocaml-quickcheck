@@ -63,7 +63,6 @@ let join_string_list lst sep =
 
 let sum_int = List.fold_left (+) 0;;
 
-let ( |> ) x f = f x
 let ( <| ) f x = f x
 
 let ( % ) f g = fun x -> f (g x)
