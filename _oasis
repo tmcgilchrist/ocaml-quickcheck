@@ -1,12 +1,13 @@
-OASISFormat: 0.2
-Name:        ocaml-quickcheck
-Version:     0.0.3
-Synopsis:    Ocaml port of haskell QuickCheck -- probabilistic testing
+OASISFormat: 0.3
+Name:        quickcheck
+Version:     1.0.0
+Synopsis:    OCaml port of Haskell QuickCheck for probabilistic testing
 Authors:     Alan Falloon, Roma Sokolov
 License:     MIT
 LicenseFile: LICENSE
-Plugins:     DevFiles (0.2), META (0.2), StdFiles (0.2)
-BuildTools:      ocamlbuild
+Plugins:     DevFiles (0.3), META (0.3), StdFiles (0.3)
+BuildTools:  ocamlbuild
+BuildDepends: optcomp
 
 Library quickcheck
   Path:            src
@@ -21,8 +22,9 @@ Executable test
   Install: false
   CompiledObject: best
   MainIs: test.ml
+  BuildDepends: quickcheck
 
 SourceRepository github
   Type:     git
-  Location: git://github.com/camlunity/ocaml-quickcheck.git
-  Browser:  https://github.com/camlunity/ocaml-quickcheck
+  Location: git://github.com/avsm/ocaml-quickcheck.git
+  Browser:  https://github.com/avsm/ocaml-quickcheck

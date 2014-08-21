@@ -1,6 +1,6 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: a0387e1469838d052cf96fcddde92be7) *)
-Authors of ocaml-quickcheck
+(* DO NOT EDIT (digest: b5566ee13a1a5e518a4a7b2650d6e85e) *)
+Authors of quickcheck
 Alan Falloon
 Roma Sokolov
 (* OASIS_STOP *)
