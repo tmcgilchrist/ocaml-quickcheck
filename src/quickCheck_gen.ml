@@ -76,7 +76,7 @@ let rec such_that p gen =
     | None -> sized (fun n -> resize (n+1) (such_that p gen)))
 
 let frequency w_gens =
-  let total = sum_int <| List.map fst w_gens in
+  let total = sum_int @@ List.map fst w_gens in
   let rec pick n lst = match lst with
     | (k, x)::_tail when n <= k -> x
     | (k, _)::tail -> pick (n - k) tail
