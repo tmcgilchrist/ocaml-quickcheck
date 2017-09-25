@@ -1,0 +1,6 @@
+(jbuild_version 1)
+
+(library
+ ((name quickcheck)
+  (public_name quickcheck)
+  (wrapped false)))

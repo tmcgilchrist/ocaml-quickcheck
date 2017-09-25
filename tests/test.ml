@@ -1,4 +1,3 @@
-
 open QuickCheck
 
 let prop_revrev xs =
@@ -8,7 +7,7 @@ let prop_mem xs = match xs with
   | [] -> true
   | (x::_) -> List.mem x xs
 
-let prop_str_copy s = s = (String.copy s)
+let prop_str_copy s = s = (Bytes.copy s)
 
 (* for generating random int lists *)
 let al = arbitrary_list arbitrary_int

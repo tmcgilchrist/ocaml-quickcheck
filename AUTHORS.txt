@@ -1,6 +1,0 @@
-(* OASIS_START *)
-(* DO NOT EDIT (digest: b5566ee13a1a5e518a4a7b2650d6e85e) *)
-Authors of quickcheck
-Alan Falloon
-Roma Sokolov
-(* OASIS_STOP *)

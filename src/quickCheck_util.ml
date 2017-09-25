@@ -1,4 +1,3 @@
-
 module Random = struct
 
   include Random
@@ -47,18 +46,11 @@ end
 
 let charlist_to_string l =
   let len = List.length l in
-#if ocaml_version >= (4, 02)
-  let bs = Bytes.create len in
+  let s = Bytes.create len in
   let i = ref 0 in
-  List.iter (fun c -> Bytes.set bs !i c; incr i) l;
-  Bytes.unsafe_to_string bs
-#endif
-#if ocaml_version < (4,02)
-  let s = String.create len in
-  let i = ref 0 in
-  List.iter (fun c -> s.[!i] <- c; incr i) l;
+  (* List.iter (fun c -> s.[!i] <- c; incr i) l; *)
+  List.iter (fun c -> Bytes.set s !i c; incr i) l;
   s
-#endif
 
 let join_string_list lst sep =
   let open Printf in
@@ -69,11 +61,8 @@ let join_string_list lst sep =
       | [] -> acc
   in to_string lst ""
 
-let sum_int = List.fold_left (+) 0;;
+let sum_int = List.fold_left (+) 0
 
-#if ocaml_version < (4, 01)
-let ( |> ) x f = f x
 let ( <| ) f x = f x
-#endif
 
 let ( % ) f g = fun x -> f (g x)

@@ -1,0 +1,18 @@
+version: "621bd50"
+opam-version: "1.2"
+maintainer: "Tim McGilchrist <timmcgil@gmail.com>"
+authors: [ "Tim McGilchrist <timmcgil@gmail.com>" ]
+license: "BSD-3-clause"
+homepage: "https://github.com/tmcgilchrist/ocaml-quickcheck"
+dev-repo: "https://github.com/tmcgilchrist/ocaml-quickcheck.git"
+bug-reports: "https://github.com/tmcgilchrist/ocaml-quickcheck/issues"
+build: [
+  ["jbuilder" "subst"] {pinned}
+  ["jbuilder" "build" "-p" name "-j" jobs]
+]
+build-test: [
+  ["jbuilder" "runtest" "-p" name]
+]
+build-doc: [ "ocaml" "setup.ml" "-doc" ]
+depends: []
+available: [ ocaml-version >= "4.03" ]
